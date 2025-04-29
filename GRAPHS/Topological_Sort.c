@@ -8,7 +8,7 @@ typedef struct node{
     struct node* next;
 }NODE;
 typedef struct{
-    NODE* node;
+    int *arr;
     int top;
 }STACK;
 NODE* createnode(int value){
@@ -22,24 +22,25 @@ void addEdge(NODE* adj[],int u,int v){
     newnode->next = adj[u];
     adj[u] = newnode;
 }
-void Push(int val,STACK* stack){
-    stack[count].node = (NODE*)malloc(sizeof(NODE));
-    stack[count].node->data = val;
-    stack[count].top = count++;
+STACK* createstack(){
+    STACK* stack = (STACK*)malloc(sizeof(STACK));
+    stack->arr = (int*)malloc(V*sizeof(int));
+    stack->top = -1;
+    return stack;
 }
 void DFS(NODE** adj,int current,bool *visited,STACK* stack){
     NODE *temp = adj[current];
-    Push(current,stack);
+    visited[current] = true;
     while(temp){
         int adjacent = temp->data;
         if(!visited[adjacent]){
-            DFS(adj,current,visited,stack);
+            DFS(adj,adjacent,visited,stack);
         }
         temp = temp->next;
     }
+    stack->arr[++stack->top] = current;
 }
-STACK* dfstraverse(NODE* adj[]){
-    STACK* stack = (STACK*)malloc(V*sizeof(STACK));
+void dfstraverse(NODE* adj[],STACK* stack){
     bool *visited = (bool*)malloc((V+1)*sizeof(bool));
     for(int i=0;i<V+1;i++) visited[i] = false;
     for(int i=1;i<=V;i++){
@@ -48,19 +49,18 @@ STACK* dfstraverse(NODE* adj[]){
         }
     }
     printf("Topological sort:");
-    for(int i=V-1;i>=0;i--){
-        printf("%d ",stack[i].node->data);
-        stack[i].top = -1;
+    while(stack->top != -1){
+        printf("%d ",stack->arr[stack->top--]);
     }
 }
 int main(void){
     NODE** adj = (NODE**)malloc((V+1)*sizeof(NODE*));
+    STACK* stack = createstack();
     for(int i=0;i<V+1;i++) adj[i] = NULL;
     addEdge(adj,1,2);
     addEdge(adj,1,4);
     addEdge(adj,4,2);
     addEdge(adj,3,4);
     addEdge(adj,3,2);
-    dfstraverse(adj);
-
+    dfstraverse(adj,stack);
 }
