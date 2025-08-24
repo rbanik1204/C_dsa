@@ -26,6 +26,4 @@ This repository is aimed at strengthening problem-solving skills and building a 
 ![Others](https://img.shields.io/badge/Others-gray?style=for-the-badge)  
 
 ---
-
-## 📂 Folder Structure
  
